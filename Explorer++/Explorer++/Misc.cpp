@@ -15,7 +15,9 @@
 #include "stdafx.h"
 #include <list>
 #include <shobjidl.h>
+#ifdef HAS_PANTHEIOS
 #include <pantheios\inserters\integer.hpp>
+#endif
 #include "Explorer++.h"
 #include "SelectColumnsDialog.h"
 #include "MainResource.h"
@@ -733,8 +735,10 @@ void *pData)
 	{
 		TCHAR szDirectory[MAX_PATH];
 		pContainer->m_pShellBrowser[pDirectoryAltered->iIndex]->QueryCurrentDirectory(SIZEOF_ARRAY(szDirectory),szDirectory);
+#ifdef HAS_PANTHEIOS
 		pantheios::log(pantheios::debug,_T("Directory change notification received for \""),szDirectory,_T("\", Action = "),
 			pantheios::integer(dwAction),_T(", Filename = \""),szFileName,_T("\""));
+#endif
 
 		pContainer->m_pShellBrowser[pDirectoryAltered->iIndex]->FilesModified(dwAction,
 			szFileName,pDirectoryAltered->iIndex,pDirectoryAltered->iFolderIndex);

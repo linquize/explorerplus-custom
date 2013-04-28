@@ -71,6 +71,9 @@
 #include <sstream>
 #include <cassert>
 #include <WinInet.h>
+#include <algorithm>
 
+#ifdef HAS_PANTHEIOS
 /* Pantheios header files. */
 #include <pantheios\pantheios.hpp>
+#endif

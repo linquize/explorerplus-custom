@@ -28,6 +28,7 @@ namespace
 #endif;
 }
 
+#ifdef HAS_PANTHEIOS
 PANTHEIOS_CALL(int) pantheios_fe_init(void *reserved,void **ptoken)
 {
     *ptoken = NULL;
@@ -54,6 +55,7 @@ PANTHEIOS_CALL(int) pantheios_fe_isSeverityLogged(void *token,int severity,int b
 
 	return 0;
 }
+#endif
 
 bool NLoggingFrontend::CheckLoggingEnabled()
 {

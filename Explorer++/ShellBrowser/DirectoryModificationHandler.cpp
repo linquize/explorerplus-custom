@@ -39,7 +39,9 @@ void CShellBrowser::DirectoryAltered(void)
 
 	SendMessage(m_hListView,WM_SETREDRAW,(WPARAM)FALSE,(LPARAM)NULL);
 
+#ifdef HAS_PANTHEIOS
 	pantheios::log(pantheios::debug,_T("ShellBrowser - Starting directory change update for \""),m_CurDir,_T("\""));
+#endif
 
 	/* Potential problem:
 	After a file is created, it may be renamed shortly afterwards.
@@ -69,34 +71,46 @@ void CShellBrowser::DirectoryAltered(void)
 			switch(af.dwAction)
 			{
 			case FILE_ACTION_ADDED:
+#ifdef HAS_PANTHEIOS
 				pantheios::log(pantheios::debug,_T("ShellBrowser - Adding \""),af.szFileName,_T("\""));
+#endif
 				OnFileActionAdded(af.szFileName);
 				break;
 
 			case FILE_ACTION_MODIFIED:
+#ifdef HAS_PANTHEIOS
 				pantheios::log(pantheios::debug,_T("ShellBrowser - Modifying \""),af.szFileName,_T("\""));
+#endif
 				ModifyItemInternal(af.szFileName);
 				break;
 
 			case FILE_ACTION_REMOVED:
+#ifdef HAS_PANTHEIOS
 				pantheios::log(pantheios::debug,_T("ShellBrowser - Removing \""),af.szFileName,_T("\""));
+#endif
 				RemoveItemInternal(af.szFileName);
 				break;
 
 			case FILE_ACTION_RENAMED_OLD_NAME:
+#ifdef HAS_PANTHEIOS
 				pantheios::log(pantheios::debug,_T("ShellBrowser - Old name received \""),af.szFileName,_T("\""));
+#endif
 				OnFileActionRenamedOldName(af.szFileName);
 				break;
 
 			case FILE_ACTION_RENAMED_NEW_NAME:
+#ifdef HAS_PANTHEIOS
 				pantheios::log(pantheios::debug,_T("ShellBrowser - New name received \""),af.szFileName,_T("\""));
+#endif
 				OnFileActionRenamedNewName(af.szFileName);
 				break;
 			}
 		}
 	}
-
+	
+#ifdef HAS_PANTHEIOS
 	pantheios::log(pantheios::debug,_T("ShellBrowser - Finished directory change update for \""),m_CurDir,_T("\""));
+#endif
 
 	SendMessage(m_hListView,WM_SETREDRAW,(WPARAM)TRUE,(LPARAM)NULL);
 

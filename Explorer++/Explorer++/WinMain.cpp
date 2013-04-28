@@ -15,8 +15,10 @@
  *****************************************************************/
 
 #include "stdafx.h"
+#ifdef HAS_PANTHEIOS
 #include <pantheios\backends\bec.file.h>
 #include <pantheios\inserters\integer.hpp>
+#endif
 #include "Explorer++.h"
 #include "LoggingFrontend.h"
 #include "Version.h"
@@ -364,7 +366,9 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,
 		PathRemoveFileSpec(szLogFile);
 		PathAppend(szLogFile,NExplorerplusplus::LOG_FILENAME);
 
+#ifdef HAS_PANTHEIOS
 		pantheios_be_file_setFilePath(szLogFile);
+#endif
 	}
 
 	/* Can't open folders that are children of the
@@ -474,7 +478,9 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,
 	BOOL bLoadSettingsFromXML;
 
 	bLoadSettingsFromXML = TestConfigFileInternal();
+#ifdef HAS_PANTHEIOS
 	pantheios::log(pantheios::informational,_T("bLoadSettingsFromXML = "),pantheios::integer(bLoadSettingsFromXML));
+#endif
 
 	if(bLoadSettingsFromXML)
 	{

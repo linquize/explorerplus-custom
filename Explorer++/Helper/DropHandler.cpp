@@ -183,38 +183,52 @@ void CDropHandler::HandleLeftClickDrop(IDataObject *pDataObject,POINTL *pptl)
 
 	if(CheckDropFormatSupported(pDataObject,&m_ftcHDrop))
 	{
+#ifdef HAS_PANTHEIOS
 		pantheios::log(pantheios::debug,_T("Helper - Copying CF_HDROP data"));
+#endif
 		hrCopy = CopyHDropData(pDataObject,bPrefferedEffect,dwEffect,
 			PastedFileList);
 	}
 	else if(CheckDropFormatSupported(pDataObject,&m_ftcShellIDList))
 	{
+#ifdef HAS_PANTHEIOS
 		pantheios::log(pantheios::debug,_T("Helper - Copying CFSTR_SHELLIDLIST data"));
+#endif
 		hrCopy = CopyShellIDListData(pDataObject,PastedFileList);
 	}
 	else if(CheckDropFormatSupported(pDataObject,&m_ftcFileDescriptorA))
 	{
+#ifdef HAS_PANTHEIOS
 		pantheios::log(pantheios::debug,_T("Helper - Copying CFSTR_FILEDESCRIPTORA data"));
+#endif
 		hrCopy = CopyAnsiFileDescriptorData(pDataObject,PastedFileList);
 	}
 	else if(CheckDropFormatSupported(pDataObject,&m_ftcFileDescriptorW))
 	{
+#ifdef HAS_PANTHEIOS
 		pantheios::log(pantheios::debug,_T("Helper - Copying CFSTR_FILEDESCRIPTORW data"));
+#endif
 		hrCopy = CopyUnicodeFileDescriptorData(pDataObject,PastedFileList);
 	}
 	else if(CheckDropFormatSupported(pDataObject,&m_ftcUnicodeText))
 	{
+#ifdef HAS_PANTHEIOS
 		pantheios::log(pantheios::debug,_T("Helper - Copying CF_UNICODETEXT data"));
+#endif
 		hrCopy = CopyUnicodeTextData(pDataObject,PastedFileList);
 	}
 	else if(CheckDropFormatSupported(pDataObject,&m_ftcText))
 	{
+#ifdef HAS_PANTHEIOS
 		pantheios::log(pantheios::debug,_T("Helper - Copying CF_TEXT data"));
+#endif
 		hrCopy = CopyAnsiTextData(pDataObject,PastedFileList);
 	}
 	else if(CheckDropFormatSupported(pDataObject,&m_ftcDIBV5))
 	{
+#ifdef HAS_PANTHEIOS
 		pantheios::log(pantheios::debug,_T("Helper - Copying CF_DIBV5 data"));
+#endif
 		hrCopy = CopyDIBV5Data(pDataObject,PastedFileList);
 	}
 

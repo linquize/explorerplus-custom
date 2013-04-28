@@ -55,5 +55,7 @@
 #include <wmsdk.h>
 #include <gdiplus.h>
 
+#ifdef HAS_PANTHEIOS
 /* Pantheios header files. */
 #include <pantheios\pantheios.hpp>
+#endif

@@ -21,12 +21,14 @@
 #include <list>
 #include <cassert>
 
+#ifdef HAS_BOOST_DATE_TIME
 /* Temporarily disable the "conditional expression is
 constant" warning. */
 #pragma warning(push)
 #pragma warning(disable:4127)
 #include <boost\date_time\posix_time\posix_time.hpp>
 #pragma warning(pop)
+#endif
 
 #include "IShellView.h"
 #include "iShellBrowser_internal.h"
@@ -1022,6 +1024,7 @@ std::wstring CShellBrowser::GetMediaMetadataColumnText(int InternalIndex,MediaMe
 
 	case MEDIAMETADATA_TYPE_DURATION:
 		{
+#ifdef HAS_BOOST_DATE_TIME
 			boost::posix_time::wtime_facet *Facet = new boost::posix_time::wtime_facet();
 			Facet->time_duration_format(L"%H:%M:%S");
 
@@ -1034,6 +1037,7 @@ std::wstring CShellBrowser::GetMediaMetadataColumnText(int InternalIndex,MediaMe
 			DateStream << Duration;
 
 			StringCchCopy(szOutput,SIZEOF_ARRAY(szOutput),DateStream.str().c_str());
+#endif
 		}
 		break;
 

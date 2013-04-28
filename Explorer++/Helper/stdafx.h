@@ -87,5 +87,7 @@
 #include <assert.h>
 #include <list>
 
+#ifdef HAS_PANTHEIOS
 /* Pantheios header files. */
 #include <pantheios\pantheios.hpp>
+#endif

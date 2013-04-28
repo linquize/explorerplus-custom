@@ -97,9 +97,6 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <PreBuildEvent>
-      <Command>subwcrev.exe "$(SolutionDir).." "$(SolutionDir)Explorer++\Version.h.tmpl" "$(SolutionDir)Explorer++\Version.h"</Command>
-    </PreBuildEvent>
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -141,9 +138,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <PreBuildEvent>
-      <Command>subwcrev.exe "$(SolutionDir).." "$(SolutionDir)Explorer++\Version.h.tmpl" "$(SolutionDir)Explorer++\Version.h"</Command>
-    </PreBuildEvent>
     <Midl>
       <TargetEnvironment>X64</TargetEnvironment>
     </Midl>
@@ -183,9 +177,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <PreBuildEvent>
-      <Command>subwcrev.exe "$(SolutionDir).." "$(SolutionDir)Explorer++\Version.h.tmpl" "$(SolutionDir)Explorer++\Version.h"</Command>
-    </PreBuildEvent>
     <ClCompile>
       <Optimization>Full</Optimization>
       <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -218,9 +209,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <PreBuildEvent>
-      <Command>subwcrev.exe "$(SolutionDir).." "$(SolutionDir)Explorer++\Version.h.tmpl" "$(SolutionDir)Explorer++\Version.h"</Command>
-    </PreBuildEvent>
     <Midl>
       <TargetEnvironment>X64</TargetEnvironment>
     </Midl>
