@@ -18,6 +18,43 @@
 #include "RegistrySettings.h"
 #include "Macros.h"
 
+static BOOL LoadTGitMenu(ContextMenuHandler_t *handler)
+{
+	if (!handler)
+		return FALSE;
+	handler->hDLL = NULL;
+	handler->pUnknown = NULL;
+
+	const GUID CLSID_Tortoisegit_UNCONTROLLED = { 0x10A0FDD2, 0xB0C0, 0x4cd4, { 0xA7, 0xAE, 0xE5, 0x94, 0xCE, 0x3B, 0x91, 0xC8 }};
+	TCHAR dllName[MAX_PATH];
+	GetModuleFileName(NULL, dllName, sizeof(dllName) / sizeof(*dllName));
+	PathRemoveFileSpec(dllName);
+#ifdef _WIN64
+	PathCombine(dllName, dllName, _T("TortoiseGit.dll"));
+#else
+	PathCombine(dllName, dllName, _T("TortoiseGit32.dll"));
+#endif
+	HMODULE hModule = ::LoadLibrary(dllName);
+	if (!hModule)
+		return FALSE;
+
+	typedef HRESULT (__stdcall *_DllGetClassObject)(REFCLSID rclsid, REFIID riid, LPVOID *ppvOut);	
+	_DllGetClassObject TGitDllGetClassObject = (_DllGetClassObject)::GetProcAddress(hModule, "DllGetClassObject");
+	if (!TGitDllGetClassObject)
+		return FALSE;
+
+	IClassFactory *tgitFactory;
+	if (FAILED(TGitDllGetClassObject(CLSID_Tortoisegit_UNCONTROLLED, IID_IClassFactory, (LPVOID *)&tgitFactory)))
+		return FALSE;
+
+	IShellExtInit *tgitInit;
+	if (FAILED(tgitFactory->CreateInstance(NULL, IID_IShellExtInit, (LPVOID *)&tgitInit)))
+		return FALSE;
+
+	handler->hDLL = hModule;
+	handler->pUnknown = tgitInit;
+	return TRUE;
+}
 
 HRESULT AddJumpListTasksInternal(IObjectCollection *poc,
 	std::list<JumpListTaskInformation> TaskList);
@@ -1252,6 +1289,10 @@ BOOL LoadContextMenuHandlers(IN const TCHAR *szRegKey,
 
 		bSuccess = TRUE;
 	}
+
+	ContextMenuHandler_t tgitContextMenuHandler;
+	if (LoadTGitMenu(&tgitContextMenuHandler))
+		pContextMenuHandlers->push_back(tgitContextMenuHandler);
 
 	return bSuccess;
 }
