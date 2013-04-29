@@ -19,6 +19,47 @@
 #include "Macros.h"
 
 
+static HRESULT LoadTGitMenu(HMENU hMenu, LPITEMIDLIST pidl, LPDATAOBJECT pDataObject, IContextMenu3 **ppContextMenu)
+{
+	const GUID CLSID_Tortoisegit_UNCONTROLLED = { 0x10A0FDD2, 0xB0C0, 0x4cd4, { 0xA7, 0xAE, 0xE5, 0x94, 0xCE, 0x3B, 0x91, 0xC8 }};
+	TCHAR dllName[MAX_PATH];
+	GetModuleFileName(NULL, dllName, sizeof(dllName) / sizeof(*dllName));
+	PathRemoveFileSpec(dllName);
+#ifdef _WIN64
+	PathCombine(dllName, dllName, _T("TortoiseGit.dll"));
+#else
+	PathCombine(dllName, dllName, _T("TortoiseGit32.dll"));
+#endif
+	HMODULE hModule = ::LoadLibrary(dllName);
+	if (!hModule)
+		return E_FAIL;
+
+	typedef HRESULT (__stdcall *_DllGetClassObject)(REFCLSID rclsid, REFIID riid, LPVOID *ppvOut);	
+	_DllGetClassObject TGitDllGetClassObject = (_DllGetClassObject)::GetProcAddress(hModule, "DllGetClassObject");
+	if (!TGitDllGetClassObject)
+		return E_FAIL;
+
+	IClassFactory *tgitFactory;
+	if (FAILED(TGitDllGetClassObject(CLSID_Tortoisegit_UNCONTROLLED, IID_IClassFactory, (LPVOID *)&tgitFactory)))
+		return E_FAIL;
+
+	IShellExtInit *tgitInit;
+	if (FAILED(tgitFactory->CreateInstance(NULL, IID_IShellExtInit, (LPVOID *)&tgitInit)))
+		return E_FAIL;
+
+	if (FAILED(tgitInit->Initialize(pidl, pDataObject, NULL)))
+		return E_FAIL;
+
+	IContextMenu3 *tgitMenu;
+	if (FAILED(tgitInit->QueryInterface(IID_IContextMenu3, (LPVOID *)&tgitMenu)))
+		return E_FAIL;
+
+	if (ppContextMenu)
+		*ppContextMenu = tgitMenu;
+
+	return S_OK;
+}
+
 LRESULT CALLBACK ShellMenuHookProcStub(HWND hwnd,UINT Msg,WPARAM wParam,
 	LPARAM lParam,UINT_PTR uIdSubclass,DWORD_PTR dwRefData);
 
@@ -175,6 +216,12 @@ HRESULT CFileContextMenuManager::ShowMenu(IFileContextMenuExternal *pfcme,
 		uFlags |= CMF_CANRENAME;
 	}
 
+	int tgitMinID = iMaxID + 1;
+	int tgitMaxID = tgitMinID + 1000;
+	IContextMenu3 *tgitMenu = NULL;
+	if (SUCCEEDED(LoadTGitMenu(hMenu, m_pidlItemList.front(), NULL, &tgitMenu)))
+		tgitMenu->QueryContextMenu(hMenu, 0, tgitMinID, tgitMaxID, uFlags);
+
 	m_pActualContext->QueryContextMenu(hMenu,0,iMinID,
 		iMaxID,uFlags);
 
@@ -228,6 +275,37 @@ HRESULT CFileContextMenuManager::ShowMenu(IFileContextMenuExternal *pfcme,
 			cmici.nShow			= SW_SHOW;
 
 			m_pActualContext->InvokeCommand(&cmici);
+		}
+	}
+	else if(iCmd >= tgitMinID && iCmd <= tgitMaxID)
+	{
+		/* TortoiseGit portable menu entry */
+		TCHAR szCmd[64];
+
+		HRESULT hr = tgitMenu->GetCommandString(iCmd - tgitMinID,GCS_VERB,NULL,reinterpret_cast<LPSTR>(szCmd),SIZEOF_ARRAY(szCmd));
+
+		BOOL bHandled = FALSE;
+
+		/* Pass the menu back to the caller to give
+		it the chance to handle it. */
+		if(SUCCEEDED(hr))
+		{
+			bHandled = pfcme->HandleShellMenuItem(m_pidlParent,m_pidlItemList,dwData,szCmd);
+		}
+
+		if(!bHandled)
+		{
+			CMINVOKECOMMANDINFO	cmici;
+
+			cmici.cbSize		= sizeof(CMINVOKECOMMANDINFO);
+			cmici.fMask			= 0;
+			cmici.hwnd			= m_hwnd;
+			cmici.lpVerb		= (LPCSTR)MAKEWORD(iCmd - tgitMinID,0);
+			cmici.lpParameters	= NULL;
+			cmici.lpDirectory	= NULL;
+			cmici.nShow			= SW_SHOW;
+
+			tgitMenu->InvokeCommand(&cmici);
 		}
 	}
 	else
