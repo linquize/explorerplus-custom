@@ -60,6 +60,60 @@ static HRESULT LoadTGitMenu(HMENU hMenu, LPITEMIDLIST pidl, LPDATAOBJECT pDataOb
 	return S_OK;
 }
 
+static void MarkSystemTGitMenu(HMENU hMenu)
+{
+	int lastSeparator = -1;
+	for(int i = 0;i < GetMenuItemCount(hMenu);i++)
+	{
+		TCHAR buf[256];
+		MENUITEMINFO mii;
+		memset(&mii, 0, sizeof(mii));
+		mii.cbSize	= sizeof(mii);
+		mii.fMask	= MIIM_FTYPE | MIIM_STRING;
+		mii.dwTypeData = buf;
+		mii.cch = _countof(buf);
+		GetMenuItemInfo(hMenu,i,TRUE,&mii);
+
+		if(mii.fType & MFT_SEPARATOR)
+		{
+			lastSeparator = i;
+		}
+		else if(lastSeparator >= 0 && (!_tcscmp(mii.dwTypeData, _T("&TortoiseGit")) || !_tcscmp(mii.dwTypeData, _T("TortoiseGit"))))
+		{
+			_tcscat(buf, _T(" (System)"));
+			SetMenuItemInfo(hMenu, i, TRUE, &mii);
+			break;
+		}
+	}
+}
+
+static void MarkLocalTGitMenu(HMENU hMenu)
+{
+	int lastSeparator = -1;
+	for(int i = 0;i < GetMenuItemCount(hMenu);i++)
+	{
+		TCHAR buf[256];
+		MENUITEMINFO mii;
+		memset(&mii, 0, sizeof(mii));
+		mii.cbSize	= sizeof(mii);
+		mii.fMask	= MIIM_FTYPE | MIIM_STRING;
+		mii.dwTypeData = buf;
+		mii.cch = _countof(buf);
+		GetMenuItemInfo(hMenu,i,TRUE,&mii);
+
+		if(mii.fType & MFT_SEPARATOR)
+		{
+			lastSeparator = i;
+		}
+		else if(lastSeparator >= 0 && (!_tcscmp(mii.dwTypeData, _T("&TortoiseGit")) || !_tcscmp(mii.dwTypeData, _T("TortoiseGit"))))
+		{
+			_tcscat(buf, _T(" (Local)"));
+			SetMenuItemInfo(hMenu, i, TRUE, &mii);
+			break;
+		}
+	}
+}
+
 LRESULT CALLBACK ShellMenuHookProcStub(HWND hwnd,UINT Msg,WPARAM wParam,
 	LPARAM lParam,UINT_PTR uIdSubclass,DWORD_PTR dwRefData);
 
@@ -222,9 +276,11 @@ HRESULT CFileContextMenuManager::ShowMenu(IFileContextMenuExternal *pfcme,
 	IContextMenu3 *tgitMenu = NULL;
 	if (SUCCEEDED(LoadTGitMenu(hMenu, m_pidlItemList.front(), m_pDataObject, &tgitMenu)))
 		tgitMenu->QueryContextMenu(hMenu, 0, tgitMinID, tgitMaxID, uFlags);
+	MarkLocalTGitMenu(hMenu);
 
 	m_pActualContext->QueryContextMenu(hMenu,0,iMinID,
 		iMaxID,uFlags);
+	MarkSystemTGitMenu(hMenu);
 
 	/* Allow the caller to add custom entries to the menu. */
 	pfcme->AddMenuEntries(m_pidlParent,m_pidlItemList,dwData,hMenu);
