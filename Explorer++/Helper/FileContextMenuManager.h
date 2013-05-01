@@ -26,7 +26,7 @@ class CFileContextMenuManager
 {
 public:
 
-	CFileContextMenuManager(HWND hwnd,LPITEMIDLIST pidlParent,std::list<LPITEMIDLIST> pidlItemList);
+	CFileContextMenuManager(HWND hwnd,LPITEMIDLIST pidlParent,IDataObject *pDataObject,std::list<LPITEMIDLIST> pidlItemList);
 	~CFileContextMenuManager();
 
 	/* Shows the context menu. */
@@ -51,6 +51,7 @@ private:
 
 	LPITEMIDLIST		m_pidlParent;
 	std::list<LPITEMIDLIST>	m_pidlItemList;
+	IDataObject			*m_pDataObject;
 };
 
 #endif

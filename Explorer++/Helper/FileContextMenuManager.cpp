@@ -64,9 +64,10 @@ LRESULT CALLBACK ShellMenuHookProcStub(HWND hwnd,UINT Msg,WPARAM wParam,
 	LPARAM lParam,UINT_PTR uIdSubclass,DWORD_PTR dwRefData);
 
 CFileContextMenuManager::CFileContextMenuManager(HWND hwnd,
-	LPITEMIDLIST pidlParent,std::list<LPITEMIDLIST> pidlItemList) :
+	LPITEMIDLIST pidlParent,IDataObject *pDataObject,std::list<LPITEMIDLIST> pidlItemList) :
 m_hwnd(hwnd),
 m_pidlParent(ILClone(pidlParent)),
+m_pDataObject(pDataObject),
 m_pShellContext3(NULL),
 m_pShellContext2(NULL),
 m_pShellContext(NULL)
@@ -219,7 +220,7 @@ HRESULT CFileContextMenuManager::ShowMenu(IFileContextMenuExternal *pfcme,
 	int tgitMinID = iMaxID + 1;
 	int tgitMaxID = tgitMinID + 1000;
 	IContextMenu3 *tgitMenu = NULL;
-	if (SUCCEEDED(LoadTGitMenu(hMenu, m_pidlItemList.front(), NULL, &tgitMenu)))
+	if (SUCCEEDED(LoadTGitMenu(hMenu, m_pidlItemList.front(), m_pDataObject, &tgitMenu)))
 		tgitMenu->QueryContextMenu(hMenu, 0, tgitMinID, tgitMaxID, uFlags);
 
 	m_pActualContext->QueryContextMenu(hMenu,0,iMinID,

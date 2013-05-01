@@ -750,7 +750,7 @@ INT_PTR CSearchDialog::OnNotify(NMHDR *pnmhdr)
 							LPITEMIDLIST pidlDirectory = ILClone(pidlFull);
 							ILRemoveLastID(pidlDirectory);
 
-							CFileContextMenuManager fcmm(m_hDlg,pidlDirectory,
+							CFileContextMenuManager fcmm(m_hDlg,pidlDirectory,NULL,
 								pidlList);
 
 							DWORD dwCursorPos = GetMessagePos();

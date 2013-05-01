@@ -223,7 +223,7 @@ void Explorerplusplus::OnTreeViewRightClick(WPARAM wParam,LPARAM lParam)
 
 				pidlList.push_back(pidlRelative);
 
-				CFileContextMenuManager fcmm(m_hContainer,pidlParent,
+				CFileContextMenuManager fcmm(m_hContainer,pidlParent,NULL,
 					pidlList);
 
 				FileContextMenuInfo_t fcmi;

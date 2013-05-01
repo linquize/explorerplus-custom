@@ -1072,16 +1072,37 @@ void Explorerplusplus::OnListViewItemRClick(POINT *pCursorPos)
 	if(nSelected > 0)
 	{
 		std::list<LPITEMIDLIST> pidlList;
+		std::vector<LPITEMIDLIST> pidlVector;
 		int iItem = -1;
 
 		while((iItem = ListView_GetNextItem(m_hActiveListView,iItem,LVNI_SELECTED)) != -1)
 		{
 			pidlList.push_back(m_pActiveShellBrowser->QueryItemRelativeIdl(iItem));
+			pidlVector.push_back(m_pActiveShellBrowser->QueryItemRelativeIdl(iItem));
 		}
 
 		LPITEMIDLIST pidlDirectory = m_pActiveShellBrowser->QueryCurrentDirectoryIdl();
+		LPCITEMIDLIST *pidlFiles = new LPCITEMIDLIST[pidlVector.size()];
+		for (int i = 0; i < pidlVector.size(); i++)
+		{
+			pidlFiles[i] = pidlVector[i];
+		}
+			HRESULT hr;
+			IShellFolder *pDesktopFolder	= NULL;
+			IShellFolder *pShellFolder		= NULL;
+			IDataObject *pDataObject		= NULL;
+			hr = SHGetDesktopFolder(&pDesktopFolder);
 
-		CFileContextMenuManager fcmm(m_hActiveListView,pidlDirectory,
+			if(SUCCEEDED(hr))
+			{
+				hr = pDesktopFolder->BindToObject(pidlDirectory,NULL,IID_IShellFolder,(LPVOID *)&pShellFolder);
+				hr = pShellFolder->GetUIObjectOf(NULL,nSelected,pidlFiles,IID_IDataObject,
+					NULL,reinterpret_cast<void **>(&pDataObject));
+
+				pShellFolder->Release();
+			}
+
+		CFileContextMenuManager fcmm(m_hActiveListView,pidlDirectory,pDataObject,
 			pidlList);
 
 		FileContextMenuInfo_t fcmi;
