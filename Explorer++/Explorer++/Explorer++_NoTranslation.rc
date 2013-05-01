@@ -33,9 +33,9 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_AUS
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_MAIN                ICON                    "res\\Explorer++.ico"
+IDI_MAIN                ICON                    "res\\Tortoise.ico"
 IDI_DISPLAYWINDOW       ICON                    "res\\Display Window.ico"
-IDI_MAIN_SMALL          ICON                    "res\\Explorer++ Small.ico"
+IDI_MAIN_SMALL          ICON                    "res\\Tortoise.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //

@@ -298,7 +298,7 @@ void Explorerplusplus::HandleMainWindowText(void)
 	}
 
 	StringCchPrintf(szTitle,SIZEOF_ARRAY(szTitle),
-	_T("%s - Explorer++"),szFolderDisplayName);
+	_T("%s - TortoiseGitExplorer"),szFolderDisplayName);
 
 	if(m_bShowUserNameInTitleBar || m_bShowPrivilegeLevelInTitleBar)
 		StringCchCat(szTitle,SIZEOF_ARRAY(szTitle),_T(" ["));

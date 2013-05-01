@@ -352,10 +352,7 @@
     <None Include="res\Display Window.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="res\Explorer++ Small.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\Explorer++.ico">
+    <None Include="res\Tortoise.ico">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="res\Filtering Applied.bmp">

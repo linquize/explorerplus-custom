@@ -371,8 +371,7 @@
   <ItemGroup>
     <None Include="res\About Image.bmp" />
     <None Include="res\Display Window.ico" />
-    <None Include="res\Explorer++ Small.ico" />
-    <None Include="res\Explorer++.ico" />
+    <None Include="res\Tortoise.ico" />
     <None Include="res\Filtering Applied.bmp" />
     <None Include="res\Folder Empty.bmp" />
     <None Include="res\Folder Locked.bmp" />
