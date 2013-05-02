@@ -77,3 +77,8 @@
 /* Pantheios header files. */
 #include <pantheios\pantheios.hpp>
 #endif
+
+#ifdef _WIN32_WINNT_WIN8
+#define IAsyncOperation IDataObjectAsyncCapability
+#define IID_IAsyncOperation IID_IDataObjectAsyncCapability
+#endif

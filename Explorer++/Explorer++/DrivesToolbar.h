@@ -67,7 +67,18 @@ private:
 
 	IExplorerplusplus *m_pexpp;
 
+#if _MSC_VER >= 1700
+	struct IDCounterHasher
+	{
+		size_t operator()(const IDCounter& t)
+		{
+			return (UINT)t;
+		}
+	};
+	std::unordered_map<IDCounter,std::wstring,IDCounterHasher> m_mapID;
+#else
 	std::unordered_map<IDCounter,std::wstring> m_mapID;
+#endif
 	IDCounter	m_IDCounter;
 };
 
